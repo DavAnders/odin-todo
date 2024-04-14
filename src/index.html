@@ -3,26 +3,54 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Todo App</title>
+    <title>To-Do App</title>
   </head>
   <body>
-    <header>
-      <h1>Todo App</h1>
-    </header>
-    <main>
-      <section id="project-list">
-        <h2>Projects</h2>
-        <!-- Placeholder where projects will be injected -->
-      </section>
-      <section id="todos">
-        <h2>Todos</h2>
-        <!-- Todos will be dynamically inserted here -->
-      </section>
-    </main>
-    <footer>
-      <p>Created with ♥</p>
-    </footer>
+    <div class="modal">
+      <span class="close">&times;</span>
+      <h2>To-Do Item</h2>
+      <form id="todo-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="item-name">Name:</label>
+            <input type="text" id="item-name" name="item-name" required />
+          </div>
+          <div class="form-group">
+            <label for="item-details">Extra Information:</label>
+            <input type="text" id="item-details" name="item-details" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="item-date">Date:</label>
+            <input type="date" id="item-date" name="item-date" />
+          </div>
+          <div class="form-group">
+            <label for="item-priority">Priority:</label>
+            <select id="item-priority" name="item-priority">
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-buttons">
+          <button type="button">Add Task</button>
+          <button type="submit">Cancel</button>
+        </div>
+      </form>
+    </div>
+    <div class="sidebar-container">
+      <div class="sidebar">
+        <div class="header">
+          <header>
+            <h1>To-Do App</h1>
+          </header>
+        </div>
+        <div class="list-container"></div>
+      </div>
+    </div>
+    <div class="content-container"></div>
     <script src="bundle.js"></script>
-    <!-- Webpack bundled file -->
   </body>
 </html>
