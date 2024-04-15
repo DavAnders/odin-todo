@@ -1,10 +1,17 @@
 body {
+  margin: 0;
+}
+
+.container {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 200px auto;
+  height: 100dvh;
 }
 
 .sidebar-container {
   grid-column: 1 / 2;
+  background-color: #f0f0f0;
+  border-right: 1px solid #ccc;
 }
 
 .modal {
