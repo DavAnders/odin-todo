@@ -3,12 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <title>To-Do App</title>
   </head>
   <body>
     <div class="modal">
-      <span class="close">&times;</span>
-      <h2>To-Do Item</h2>
+      <div class="modal-top">
+        <h2>To-Do Item</h2>
+        <button class="close">&times;</button>
+      </div>
       <form id="todo-form">
         <div class="form-row">
           <div class="form-group">
@@ -35,8 +38,8 @@
           </div>
         </div>
         <div class="form-buttons">
-          <button type="button">Add Task</button>
-          <button type="submit">Cancel</button>
+          <button type="submit">Add Task</button>
+          <button type="button">Cancel</button>
         </div>
       </form>
     </div>

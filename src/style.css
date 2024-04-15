@@ -1,0 +1,50 @@
+body {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+}
+
+.sidebar-container {
+  grid-column: 1 / 2;
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.modal input {
+  background-color: skyblue;
+  width: 150px;
+  border-radius: 12px;
+  border: 1px solid blue;
+  box-sizing: border-box;
+  padding-left: 4px;
+}
+
+.close {
+  color: #aaa;
+  font-size: 28px;
+  font-weight: bold;
+  height: min-content;
+  border: none;
+}
+
+.close:hover {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-top {
+  display: flex;
+  justify-content: space-between;
+}
