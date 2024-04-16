@@ -1,9 +1,7 @@
+import { initializeUI } from "./domFunctions";
+import "./style.css";
+
 console.log("webpack is working");
-
-import Project from "./project";
-import TodoItem from "./todoItem";
-import { saveToLocalStorage, loadFromLocalStorage } from "./localStorage";
-
 const defaultProjects = [
   {
     id: 1,
@@ -42,3 +40,7 @@ const defaultProjects = [
     ],
   },
 ];
+
+document.addEventListener("DOMContentLoaded", () => {
+  initializeUI();
+});

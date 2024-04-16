@@ -1,5 +1,5 @@
 import Project from "./project";
-import { loadFromLocalStorage } from "./localStorage";
+import { loadFromLocalStorage, saveToLocalStorage } from "./localStorage";
 import TodoItem from "./todoItem";
 
 class ProjectsManager {
