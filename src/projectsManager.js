@@ -10,7 +10,7 @@ class ProjectsManager {
 
   loadProjects() {
     const storedProjects = loadFromLocalStorage("projects");
-    if (storedProjects) {
+    if (storedProjects && storedProjects.length > 0) {
       this.projects = storedProjects.map((proj) => {
         const project = new Project(proj.name);
         project.todos.forEach((todo) =>
@@ -60,6 +60,15 @@ class ProjectsManager {
     return project ? project.todos : [];
   }
 
+  deleteProject(name) {
+    this.projects = this.projects.filter((proj) => proj.name !== name);
+    this.saveProjects();
+  }
+
+  getProjects() {
+    return this.projects;
+  }
+
   addTodoToProject(projectName, title, description, dueDate, priority) {
     const project = this.findProjectByName(projectName);
     if (project) {
@@ -69,9 +78,20 @@ class ProjectsManager {
     }
   }
 
-  deleteProject(name) {
-    this.projects = this.projects.filter((proj) => proj.name !== name);
-    this.saveProjects();
+  updateTodoInProject(projectName, todoId, data) {
+    const project = this.findProjectByName(projectName);
+    if (project) {
+      project.updateTodo(todoId, data);
+      this.saveProjects();
+    }
+  }
+
+  removeTodoFromProject(projectName, todoId) {
+    const project = this.findProjectByName(projectName);
+    if (project) {
+      project.deleteTodo(todoId);
+      this.saveProjects();
+    }
   }
 }
 
