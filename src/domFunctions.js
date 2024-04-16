@@ -3,11 +3,29 @@ import manager from "./projectsManager";
 export function initializeUI() {
   renderProjectList();
   setupGlobalEventListeners();
+  handleFormSubmit();
+}
+
+function handleFormSubmit(event) {
+  event.preventDefault();
+
+  const projectName = document.getElementById("project-selector").value;
+  const name = document.getElementById("item-name").value;
+  const details = document.getElementById("item-details").value;
+  const date = document.getElementById("item-date").value;
+  const priority = document.getElementById("item-priority").value;
+
+  addTodoToProject(projectName, name, details, date, priority);
+
+  console.log("Form Submitted", { projectName, name, details, date, priority });
+  document.getElementById("todo-form").reset();
 }
 
 function renderProjectList() {
   const projects = manager.getProjects();
   const projectListElement = document.getElementById("project-list");
+  const projectSelector = document.getElementById("project-selector");
+  projectSelector.innerHTML = "";
   projectListElement.innerHTML = "";
 
   projects.forEach((project) => {
@@ -16,6 +34,11 @@ function renderProjectList() {
     projectElement.textContent = project.name;
     projectElement.onclick = () => renderTodos(project.name);
     projectListElement.appendChild(projectElement);
+
+    const option = document.createElement("option");
+    option.value = project.name;
+    option.textContent = project.name;
+    projectSelector.appendChild(option);
   });
 }
 
