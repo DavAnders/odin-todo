@@ -8,13 +8,13 @@ function saveToLocalStorage(key, data) {
 }
 
 function loadFromLocalStorage(key) {
-  let parsedItem;
   try {
     const item = localStorage.getItem(key);
-    parsedItem = JSON.parse(item);
+    return JSON.parse(item);
   } catch (error) {
     console.error("Error loading from local storage:", error);
     return null;
   }
-  return parsedItem;
 }
+
+export { saveToLocalStorage, loadFromLocalStorage };

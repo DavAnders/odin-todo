@@ -1,3 +1,5 @@
+import TodoItem from "./todoItem";
+
 class Project {
   constructor(name) {
     this.name = name;
@@ -5,6 +7,9 @@ class Project {
   }
 
   addTodo(todo) {
+    if (!(todo instanceof TodoItem)) {
+      throw new Error("addTodo expects TodoItem");
+    }
     this.todos.push(todo);
   }
 
@@ -23,9 +28,12 @@ class Project {
       todo.description = data.description || todo.description;
       todo.dueDate = data.dueDate || todo.dueDate;
       todo.priority = data.priority || todo.priority;
+      todo.isCompleted =
+        data.isCompleted !== undefined ? data.isCompleted : todo.isCompleted;
     }
   }
 
+  // might not need
   markCompleted(todoID) {
     const todo = this.getTodoByID(todoID);
     todo.isCompleted = true;
