@@ -44,4 +44,36 @@ class ProjectsManager {
     }));
     saveToLocalStorage("projects", projectsToStore);
   }
+
+  addProject(name) {
+    const newProject = new Project(name);
+    this.projects.push(newProject);
+    this.saveProjects();
+  }
+
+  findProjectByName(name) {
+    return this.projects.find((proj) => proj.name === name);
+  }
+
+  getProjectTodos(projectName) {
+    const project = this.findProjectByName(projectName);
+    return project ? project.todos : [];
+  }
+
+  addTodoToProject(projectName, title, description, dueDate, priority) {
+    const project = this.findProjectByName(projectName);
+    if (project) {
+      const todo = new TodoItem(title, description, dueDate, priority);
+      project.addTodo(todo);
+      this.saveProjects;
+    }
+  }
+
+  deleteProject(name) {
+    this.projects = this.projects.filter((proj) => proj.name !== name);
+    this.saveProjects();
+  }
 }
+
+const manager = new ProjectsManager();
+export default manager;
