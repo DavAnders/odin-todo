@@ -3,7 +3,7 @@ import manager from "./projectsManager";
 export function initializeUI() {
   renderProjectList();
   setupGlobalEventListeners();
-  handleFormSubmit();
+  setupFormEventListeners();
 }
 
 function handleFormSubmit(event) {
@@ -15,10 +15,11 @@ function handleFormSubmit(event) {
   const date = document.getElementById("item-date").value;
   const priority = document.getElementById("item-priority").value;
 
-  addTodoToProject(projectName, name, details, date, priority);
-
+  manager.addTodoToProject(projectName, name, details, date, priority);
   console.log("Form Submitted", { projectName, name, details, date, priority });
-  document.getElementById("todo-form").reset();
+  renderTodos(projectName);
+  toggleModalVisibility(false); // Close modal on submit
+  event.target.reset();
 }
 
 function renderProjectList() {
@@ -40,35 +41,104 @@ function renderProjectList() {
     option.textContent = project.name;
     projectSelector.appendChild(option);
   });
+
+  if (projects.length > 0) {
+    renderTodos(projects[0].name);
+  } else {
+    toggleModalVisibility(true); // Show modal if no projects exist
+  }
 }
 
 function renderTodos(projectName) {
   const todos = manager.getProjectTodos(projectName);
-  const contentContainer = document.querySelector(".content-container");
-  contentContainer.innerHTML = "";
+  const todoContainer = document.querySelector(".todo-container"); // This should be already defined in your HTML
+  if (!todoContainer) {
+    console.error("Todo container not found!");
+    return; // Stop the function if the container doesn't exist
+  }
+
+  todoContainer.innerHTML = ""; // Clear existing todos only, without affecting the modal
 
   todos.forEach((todo) => {
     const todoElement = document.createElement("div");
     todoElement.className = "todo-item";
     todoElement.innerHTML = `
-        <h3>${todo.title}</h3>
-        <p>Description: ${todo.description}</p>
-        <p>Due: ${todo.dueDate}</p>
-        <p>Priority: ${todo.priority}</p>
-        <button onclick="updateTodo('${projectName}', '${todo.id}')">Edit</button>
-        <button onclick="deleteTodo('${projectName}', '${todo.id}')">Delete</button>
-    `;
+            <h3>${todo.title}</h3>
+            <p>Description: ${todo.description}</p>
+            <p>Due: ${todo.dueDate}</p>
+            <p>Priority: ${todo.priority}</p>
+        `; // Define the HTML structure of a todo item
+
+    const editButton = document.createElement("button");
+    editButton.textContent = "Edit";
+    editButton.addEventListener("click", () => editTodo(todo, projectName));
+
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    deleteButton.addEventListener("click", () => {
+      if (confirm("Are you sure you want to delete this todo?")) {
+        manager.removeTodoFromProject(projectName, todo.id);
+        renderTodos(projectName); // Update the list after deleting
+      }
+    });
+
+    todoElement.appendChild(editButton);
+    todoElement.appendChild(deleteButton);
+
     if (todo.isCompleted) {
       todoElement.classList.add("completed");
     }
-    contentContainer.appendChild(todoElement);
+
+    todoContainer.appendChild(todoElement); // Append each todo element to the designated todo container
   });
 }
 
+function showNewTodoModal() {
+  toggleModalVisibility(true);
+}
+
+function toggleModalVisibility(show = true) {
+  const modal = document.querySelector(".modal");
+  if (modal) {
+    modal.style.visibility = show ? "visible" : "hidden";
+    modal.style.opacity = show ? 1 : 0;
+  } else {
+    console.error("Modal element not found!");
+  }
+}
+
 function setupGlobalEventListeners() {
-  document
-    .getElementById("new-project-btn")
-    .addEventListener("click", createNewProject);
+  const addTaskBtn = document.getElementById("add-task-btn");
+  if (addTaskBtn) {
+    addTaskBtn.addEventListener("click", () => toggleModalVisibility(true)); // Correctly toggle visibility to add tasks
+  } else {
+    console.error("Add Task button not found!");
+  }
+
+  const projectSelector = document.getElementById("project-selector");
+  if (projectSelector) {
+    projectSelector.addEventListener("change", onProjectChange);
+  } else {
+    console.error("Project selector not found!");
+  }
+}
+
+function setupFormEventListeners() {
+  const todoForm = document.getElementById("todo-form");
+  if (todoForm) {
+    todoForm.addEventListener("submit", handleFormSubmit);
+  } else {
+    console.error("Todo form not found!");
+  }
+
+  document.querySelectorAll(".modal .close").forEach((button) => {
+    button.addEventListener("click", () => toggleModalVisibility(false));
+  });
+}
+
+function onProjectChange() {
+  const selectedProject = document.getElementById("project-selector").value;
+  renderTodos(selectedProject);
 }
 
 function createNewProject() {
@@ -76,6 +146,7 @@ function createNewProject() {
   if (projectName) {
     manager.addProject(projectName);
     renderProjectList();
+    toggleModalVisibility(false);
   }
 }
 
