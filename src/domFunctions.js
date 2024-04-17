@@ -9,19 +9,11 @@ export function initializeUI() {
 function handleFormSubmit(event) {
   event.preventDefault();
 
-  const projectName = document.getElementById("project-selector").value;
+  const projectName = document.getElementById("current-project").value;
   const name = document.getElementById("item-name").value;
   const details = document.getElementById("item-details").value;
   const date = document.getElementById("item-date").value;
   const priority = document.getElementById("item-priority").value;
-
-  console.log("Form data captured", {
-    projectName,
-    name,
-    details,
-    date,
-    priority,
-  });
 
   if (!name.trim() || !details.trim() || !date.trim()) {
     console.error("Essential todo details are missing!");
@@ -38,28 +30,23 @@ function handleFormSubmit(event) {
 function renderProjectList() {
   const projects = manager.getProjects();
   const projectListElement = document.getElementById("project-list");
-  const projectSelector = document.getElementById("project-selector");
-  projectSelector.innerHTML = "";
   projectListElement.innerHTML = "";
 
   projects.forEach((project) => {
     const projectElement = document.createElement("div");
     projectElement.className = "project";
     projectElement.textContent = project.name;
-    projectElement.onclick = () => renderTodos(project.name);
+    projectElement.onclick = () => {
+      renderTodos(project.name);
+      setCurrentProject(project.name);
+    };
     projectListElement.appendChild(projectElement);
-
-    const option = document.createElement("option");
-    option.value = project.name;
-    option.textContent = project.name;
-    projectSelector.appendChild(option);
   });
+}
 
-  if (projects.length > 0) {
-    renderTodos(projects[0].name);
-  } else {
-    toggleModalVisibility(true);
-  }
+function setCurrentProject(name) {
+  const currentProjectInput = document.getElementById("current-project");
+  currentProjectInput.value = name;
 }
 
 function renderTodos(projectName) {
@@ -73,42 +60,36 @@ function renderTodos(projectName) {
   todoContainer.innerHTML = "";
 
   todos.forEach((todo) => {
-    console.log(todo);
     const todoElement = document.createElement("div");
-    todoElement.className = "todo-item";
+    todoElement.className =
+      "todo-item" + (todo.isCompleted ? " completed" : "");
+
     todoElement.innerHTML = `
             <h3>${todo.title}</h3>
             <p>Description: ${todo.description}</p>
             <p>Due: ${todo.dueDate}</p>
-            <p>Priority: ${todo.priority}</p>
+            <p>Priority: ${
+              todo.priority[0].toUpperCase() + todo.priority.substring(1)
+            }</p>
+            <label><input type="checkbox" ${
+              todo.isCompleted ? "checked" : ""
+            } onclick="toggleTodoComplete('${projectName}', '${
+      todo.id
+    }')"> Completed</label>
         `;
 
     const editButton = document.createElement("button");
     editButton.textContent = "Edit";
-    editButton.addEventListener("click", () => editTodo(todo, projectName));
+    editButton.onclick = () => editTodo(projectName, todo.id);
 
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Delete";
-    deleteButton.addEventListener("click", () => {
-      if (confirm("Are you sure you want to delete this todo?")) {
-        manager.removeTodoFromProject(projectName, todo.id);
-        renderTodos(projectName);
-      }
-    });
+    deleteButton.onclick = () => deleteTodo(projectName, todo.id);
 
     todoElement.appendChild(editButton);
     todoElement.appendChild(deleteButton);
-
-    if (todo.isCompleted) {
-      todoElement.classList.add("completed");
-    }
-
     todoContainer.appendChild(todoElement);
   });
-}
-
-function showNewTodoModal() {
-  toggleModalVisibility(true);
 }
 
 function toggleModalVisibility(show = true) {
@@ -172,9 +153,15 @@ function createNewProject() {
 }
 
 window.editTodo = function (projectName, todoId) {
-  const todo = manager
-    .getProjectTodos(projectName)
-    .find((t) => t.id === todoId);
+  console.log("Project Name:", projectName);
+  console.log("Todo ID:", todoId);
+
+  const todos = manager.getProjectTodos(projectName);
+  console.log("Todos:", todos);
+
+  const todo = todos.find((t) => t.id === todoId);
+  console.log("Found Todo:", todo);
+
   if (!todo) {
     alert("Todo not found!");
     return;
@@ -203,6 +190,17 @@ window.editTodo = function (projectName, todoId) {
 window.deleteTodo = function (projectName, todoId) {
   if (confirm("Are you sure you want to delete this todo?")) {
     manager.removeTodoFromProject(projectName, todoId);
+    renderTodos(projectName);
+  }
+};
+
+window.toggleTodoComplete = function (projectName, todoId) {
+  const todo = manager
+    .getProjectTodos(projectName)
+    .find((t) => t.id === todoId);
+  if (todo) {
+    todo.isCompleted = !todo.isCompleted;
+    manager.updateTodoInProject(projectName, todoId, todo);
     renderTodos(projectName);
   }
 };

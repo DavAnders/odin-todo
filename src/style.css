@@ -1,5 +1,8 @@
 body {
+  font-family: "Arial", sans-serif;
+  background-color: #f4f4f9;
   margin: 0;
+  color: #333;
 }
 
 .container {
@@ -9,6 +12,7 @@ body {
 }
 
 .sidebar-container {
+  padding: 10px;
   grid-column: 1 / 2;
   background-color: #f0f0f0;
   border-right: 1px solid #ccc;
@@ -54,4 +58,141 @@ body {
 .modal-top {
   display: flex;
   justify-content: space-between;
+}
+
+.project-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.project {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.project:hover {
+  background-color: #0056b3;
+}
+
+.todo-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 0;
+}
+
+.todo-item {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: relative;
+  transition: box-shadow 0.3s;
+}
+
+.todo-item.completed {
+  background-color: #e8f5e9;
+}
+
+.todo-item:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.todo-item h3 {
+  color: #333;
+  margin-top: 0;
+}
+
+.todo-item p {
+  margin: 5px 0;
+  line-height: 1.6;
+}
+
+/* Button styles within todo items */
+.todo-item button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.edit-button {
+  background-color: #ffc107;
+  color: #333;
+}
+
+.delete-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+/* Checkbox  */
+input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+label {
+  cursor: pointer;
+}
+
+/* Modal updated styles */
+.modal {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  width: 80%;
+  max-width: 400px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.modal.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+/*  global button styles */
+#new-project-btn,
+#add-task-btn {
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+#new-project-btn:hover,
+#add-task-btn:hover {
+  background-color: #218838;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.content-container {
+  padding: 20px;
 }
