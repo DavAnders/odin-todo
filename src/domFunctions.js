@@ -15,10 +15,23 @@ function handleFormSubmit(event) {
   const date = document.getElementById("item-date").value;
   const priority = document.getElementById("item-priority").value;
 
+  console.log("Form data captured", {
+    projectName,
+    name,
+    details,
+    date,
+    priority,
+  });
+
+  if (!name.trim() || !details.trim() || !date.trim()) {
+    console.error("Essential todo details are missing!");
+    alert("Please fill in all fields.");
+    return;
+  }
+
   manager.addTodoToProject(projectName, name, details, date, priority);
-  console.log("Form Submitted", { projectName, name, details, date, priority });
   renderTodos(projectName);
-  toggleModalVisibility(false); // Close modal on submit
+  toggleModalVisibility(false);
   event.target.reset();
 }
 
@@ -45,21 +58,22 @@ function renderProjectList() {
   if (projects.length > 0) {
     renderTodos(projects[0].name);
   } else {
-    toggleModalVisibility(true); // Show modal if no projects exist
+    toggleModalVisibility(true);
   }
 }
 
 function renderTodos(projectName) {
   const todos = manager.getProjectTodos(projectName);
-  const todoContainer = document.querySelector(".todo-container"); // This should be already defined in your HTML
+  const todoContainer = document.querySelector(".todo-container");
   if (!todoContainer) {
     console.error("Todo container not found!");
-    return; // Stop the function if the container doesn't exist
+    return;
   }
 
-  todoContainer.innerHTML = ""; // Clear existing todos only, without affecting the modal
+  todoContainer.innerHTML = "";
 
   todos.forEach((todo) => {
+    console.log(todo);
     const todoElement = document.createElement("div");
     todoElement.className = "todo-item";
     todoElement.innerHTML = `
@@ -67,7 +81,7 @@ function renderTodos(projectName) {
             <p>Description: ${todo.description}</p>
             <p>Due: ${todo.dueDate}</p>
             <p>Priority: ${todo.priority}</p>
-        `; // Define the HTML structure of a todo item
+        `;
 
     const editButton = document.createElement("button");
     editButton.textContent = "Edit";
@@ -78,7 +92,7 @@ function renderTodos(projectName) {
     deleteButton.addEventListener("click", () => {
       if (confirm("Are you sure you want to delete this todo?")) {
         manager.removeTodoFromProject(projectName, todo.id);
-        renderTodos(projectName); // Update the list after deleting
+        renderTodos(projectName);
       }
     });
 
@@ -89,7 +103,7 @@ function renderTodos(projectName) {
       todoElement.classList.add("completed");
     }
 
-    todoContainer.appendChild(todoElement); // Append each todo element to the designated todo container
+    todoContainer.appendChild(todoElement);
   });
 }
 
@@ -110,7 +124,7 @@ function toggleModalVisibility(show = true) {
 function setupGlobalEventListeners() {
   const addTaskBtn = document.getElementById("add-task-btn");
   if (addTaskBtn) {
-    addTaskBtn.addEventListener("click", () => toggleModalVisibility(true)); // Correctly toggle visibility to add tasks
+    addTaskBtn.addEventListener("click", () => toggleModalVisibility(true));
   } else {
     console.error("Add Task button not found!");
   }
@@ -120,6 +134,13 @@ function setupGlobalEventListeners() {
     projectSelector.addEventListener("change", onProjectChange);
   } else {
     console.error("Project selector not found!");
+  }
+
+  const newProjectBtn = document.getElementById("new-project-btn");
+  if (newProjectBtn) {
+    newProjectBtn.addEventListener("click", createNewProject);
+  } else {
+    console.error("New Project button not found!");
   }
 }
 

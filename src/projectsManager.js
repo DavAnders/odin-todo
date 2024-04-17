@@ -13,13 +13,13 @@ class ProjectsManager {
     if (storedProjects && storedProjects.length > 0) {
       this.projects = storedProjects.map((proj) => {
         const project = new Project(proj.name);
-        project.todos.forEach((todo) =>
+        proj.todos.forEach((todo) =>
           project.addTodo(
             new TodoItem(
               todo.title,
               todo.description,
               todo.dueDate,
-              todo.priotrity
+              todo.priority
             )
           )
         );
@@ -72,9 +72,15 @@ class ProjectsManager {
   addTodoToProject(projectName, title, description, dueDate, priority) {
     const project = this.findProjectByName(projectName);
     if (project) {
+      console.log("Creating Todo with:", {
+        title,
+        description,
+        dueDate,
+        priority,
+      });
       const todo = new TodoItem(title, description, dueDate, priority);
       project.addTodo(todo);
-      this.saveProjects;
+      this.saveProjects();
     }
   }
 
